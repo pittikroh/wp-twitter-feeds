@@ -232,44 +232,11 @@
 						'replies_excl' => $replies_excl
 					)
 				);
-				if($api_call->http_code != 200) :
-					$tweets = get_option($backupName);
-
-				else :
-					$limitToDisplay = min($tweets_count, count($fetchedTweets));
-					
-					for($i = 0; $i < $limitToDisplay; $i++) :
-						$tweet = $fetchedTweets[$i];
-				    	$name = $tweet->user->name;
-				    	$screen_name = $tweet->user->screen_name;
-				    	$permalink = 'http://twitter.com/'. $name .'/status/'. $tweet->id_str;
-				    	$tweet_id = $tweet->id_str;
-				    	$image = $tweet->user->profile_image_url;
-						$text = $this->sanitize_links($tweet);
-				    	$time = $tweet->created_at;
-				    	$time = date_parse($time);
-				    	$uTime = mktime($time['hour'], $time['minute'], $time['second'], $time['month'], $time['day'], $time['year']);
-				    	$tweets[] = array(
-				    		'text' => $text,
-				    		'scr_name'=>$screen_name,
-				    		'favourite_count'=>$tweet->favorite_count,
-				    		'retweet_count'=>$tweet->retweet_count,
-				    		'name' => $name,
-				    		'permalink' => $permalink,
-				    		'image' => $image,
-				    		'time' => $uTime,
-				    		'tweet_id' => $tweet_id
-				    		);
-					endfor;
-					set_transient($transName, $tweets, 60 * $timeto_store);
-					update_option($backupName, $tweets);
-				endif;	
-
 			else if (true === $loklak_api): 
 				if(!class_exists('Loklak')):
 					require_once('loklak_php_api/loklak.php')
 				endif;
-				$$api_call = new Loklak();
+				$api_call = new Loklak();
                 $fetchedTweets = $api_call->search('', null, null, $name, $totalToFetch);
                 $fetchedTweets = json_decode($fetchedTweets, true);
                 $fetchedTweets = json_decode($fetchedTweets['body'], true);
@@ -278,7 +245,40 @@
 			endif;
 
 						
-			
+			if($api_call->http_code != 200 && false === $loklak_api) :
+				$tweets = get_option($backupName);
+
+			else :
+				$limitToDisplay = min($tweets_count, count($fetchedTweets));
+				
+				for($i = 0; $i < $limitToDisplay; $i++) :
+					$tweet = $fetchedTweets[$i];
+			    	$name = $tweet->user->name;
+			    	$screen_name = $tweet->user->screen_name;
+			    	$permalink = 'http://twitter.com/'. $name .'/status/'. $tweet->id_str;
+			    	$tweet_id = $tweet->id_str;
+			    	$fav_count = ($loklak_api === true ? $tweet->favourites_count : $tweet->favorite_count);
+			    	$image = $tweet->user->profile_image_url;
+					$text = $this->sanitize_links($tweet);
+			    	$time = $tweet->created_at;
+			    	$time = date_parse($time);
+			    	$uTime = mktime($time['hour'], $time['minute'], $time['second'], $time['month'], $time['day'], $time['year']);
+			    	$tweets[] = array(
+			    		'text' => $text,
+			    		'scr_name'=>$screen_name,
+			    		'favourite_count'=>$fav_count,
+			    		'retweet_count'=>$tweet->retweet_count,
+			    		'name' => $name,
+			    		'permalink' => $permalink,
+			    		'image' => $image,
+			    		'time' => $uTime,
+			    		'tweet_id' => $tweet_id
+			    		);
+				endfor;
+				set_transient($transName, $tweets, 60 * $timeto_store);
+				update_option($backupName, $tweets);
+				endif;
+			endif;	
 			if(!function_exists('twitter_time_diff'))
 			{
 				function twitter_time_diff( $from, $to = '' ) {
