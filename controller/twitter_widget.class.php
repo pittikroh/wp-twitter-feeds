@@ -14,6 +14,7 @@ class wptt_TwitterTweets extends WP_Widget {
         $widget_title = $instance['title'];
         $name = $instance['name'];
         $tweets_count = $instance['tweets_cnt'];
+        $loklak = $instance['loklak_api'];
         $accessTokenSecret = trim($instance['accessTokenSecret']);
         $replies_excl = $instance['replies_excl'];
         $consumerSecret = trim($instance['consumerSecret']);
@@ -48,6 +49,7 @@ class wptt_TwitterTweets extends WP_Widget {
             , 'store_time' => 4
             , 'replies_excl' => true
             , 'disp_scr_name' => false
+            , 'loklak_api' => true
             , 'consumerKey' => ''
             , 'consumerSecret' => ''
             , 'accessToken' => ''
@@ -110,6 +112,7 @@ class wptt_TwitterTweets extends WP_Widget {
         $instance['twitterIntentsText'] = $new_instance['twitterIntentsText'];
         $instance['intentColor'] = strip_tags($new_instance['intentColor']);
         $instance['slide_style'] = $new_instance['slide_style'];
+        $instance['loklak_api'] = $new_instance['loklak_api'];
         $instance['consumerKey'] = trim($new_instance['consumerKey']);
         $instance['consumerSecret'] = trim($new_instance['consumerSecret']);
         $instance['accessToken'] = trim($new_instance['accessToken']);
@@ -145,6 +148,7 @@ class wptt_TwitterTweets extends WP_Widget {
         $this->widgetid = $args['widget_id'];
         $wpltf_wdgt_title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
         $wpltf_wdgt_name = $instance['name'];
+        $wpltf_wdgt_loklakApi = $instance['loklak_api'];
         $wpltf_wdgt_consumerSecret = trim($instance['consumerSecret']);
         $wpltf_wdgt_accessTokenSecret = trim($instance['accessTokenSecret']);
         $widget_replies_excl = isset($instance['replies_excl']) ? $instance['replies_excl'] : false;
@@ -166,7 +170,7 @@ class wptt_TwitterTweets extends WP_Widget {
         $wpltf_wdgt_tweet_theme = isset($instance['tweet_theme']) ? $instance['tweet_theme'] : 'light';
         if (!empty($wpltf_wdgt_title))
             echo $before_title . $wpltf_wdgt_title . $after_title;
-        if ($wpltf_wdgt_consumerKey == '' || $wpltf_wdgt_consumerSecret == '' || $wpltf_wdgt_accessTokenSecret == '' || $wpltf_wdgt_accessToken == '') {
+        if( !$wpltf_wdgt_loklakApi && ( $wpltf_wdgt_consumerKey=='' || $wpltf_wdgt_consumerSecret =='' || $wpltf_wdgt_accessTokenSecret=='' || $wpltf_wdgt_accessToken=='' )) {
             echo '<div class="isa_error">Bad Authentication data.<br/>Please enter valid API Keys.</div>';
         } else {
             $class = 'light';
@@ -189,6 +193,7 @@ class wptt_TwitterTweets extends WP_Widget {
                 $tweets_count = $wpltf_wdgt_tweets_cnt;
                 $name = $wpltf_wdgt_name;
                 $timeto_store = $wpltf_wdgt_store_time;
+                $loklak_api = $wpltf_wdgt_loklakApi;
                 $consumerSecret = trim($wpltf_wdgt_consumerSecret);
                 $accessToken = trim($wpltf_wdgt_accessToken);
                 $accessTokenSecret = trim($wpltf_wdgt_accessTokenSecret);
@@ -206,55 +211,63 @@ class wptt_TwitterTweets extends WP_Widget {
                 $border_rad_avatar = $wpltf_wdgt_border_rad;
                 $transName = 'list-tweets-' . $name;
                 $backupName = $transName . '-backup';
-                if (false === ($tweets = get_transient($transName) )) :
-                    require_once 'twitteroauth/twitteroauth.php';
+                if (false === ($tweets = get_transient($transName) ) ) :
+                    if (false === $loklak_api) :
+                        require_once 'twitteroauth/twitteroauth.php';
 
-                    $api_call = new TwitterOAuth(
-                            $consumerKey, $consumerSecret, $accessToken, $accessTokenSecret
-                    );
-                    $totalToFetch = ($replies_excl) ? max(50, $tweets_count * 3) : $tweets_count;
+                        $api_call = new TwitterOAuth(
+                                $consumerKey, $consumerSecret, $accessToken, $accessTokenSecret
+                        );
+                        $totalToFetch = ($replies_excl) ? max(50, $tweets_count * 3) : $tweets_count;
 
-                    $fetchedTweets = $api_call->get(
+                        $fetchedTweets = $api_call->get(
                             'statuses/user_timeline', array(
-                        'screen_name' => $name,
-                        'count' => $totalToFetch,
-                        'replies_excl' => $replies_excl
+                            'screen_name' => $name,
+                            'count' => $totalToFetch,
+                            'replies_excl' => $replies_excl
                             )
-                    );
+                        );
+                    else : 
+                        if(!class_exists('Loklak')) :
+                            require_once('loklak_php_api/loklak.php')
+                        endif;
+                        $api_call = new Loklak();
+                        $fetchedTweets = $api_call->search('', null, null, $name, $totalToFetch);
+                        $fetchedTweets = json_decode($fetchedTweets, true);
+                        $fetchedTweets = json_decode($fetchedTweets['body'], true);
+                        $fetchedTweets = $fetchedTweets['statuses'];
+                        $fetchedTweets = (object)$fetchedTweets;
+                    endif;
 
-                    if ($api_call->http_code != 200) :
+                    if($api_call->http_code != 200 && false === $loklak_api) :
                         $tweets = get_option($backupName);
 
                     else :
                         $limitToDisplay = min($tweets_count, count($fetchedTweets));
-
-                        for ($i = 0; $i < $limitToDisplay; $i++) :
+                        
+                        for($i = 0; $i < $limitToDisplay; $i++) :
                             $tweet = $fetchedTweets[$i];
                             $name = $tweet->user->name;
                             $screen_name = $tweet->user->screen_name;
-                            $permalink = 'https://twitter.com/' . $name . '/status/' . $tweet->id_str;
+                            $permalink = 'http://twitter.com/'. $name .'/status/'. $tweet->id_str;
                             $tweet_id = $tweet->id_str;
-                            if (is_ssl()) {
-                                $image = esc_url(( isset($tweet->retweeted_status) ) ? $tweet->retweeted_status->user->profile_image_url_https : $tweet->user->profile_image_url_https );
-                            } else {
-                                $image = esc_url(( isset($tweet->retweeted_status) ) ? $tweet->retweeted_status->user->profile_image_url : $tweet->user->profile_image_url );
-                            }
-                            //$image = $tweet->user->profile_image_url;
+                            $fav_count = ($loklak_api === true ? $tweet->favourites_count : $tweet->favorite_count);
+                            $image = $tweet->user->profile_image_url;
                             $text = $this->sanitize_links($tweet);
                             $time = $tweet->created_at;
                             $time = date_parse($time);
                             $uTime = mktime($time['hour'], $time['minute'], $time['second'], $time['month'], $time['day'], $time['year']);
                             $tweets[] = array(
                                 'text' => $text,
-                                'scr_name' => $screen_name,
-                                'favourite_count' => $tweet->favorite_count,
-                                'retweet_count' => $tweet->retweet_count,
+                                'scr_name'=>$screen_name,
+                                'favourite_count'=>$fav_count,
+                                'retweet_count'=>$tweet->retweet_count,
                                 'name' => $name,
                                 'permalink' => $permalink,
                                 'image' => $image,
                                 'time' => $uTime,
                                 'tweet_id' => $tweet_id
-                            );
+                                );
                         endfor;
                         set_transient($transName, $tweets, 60 * $timeto_store);
                         update_option($backupName, $tweets);
