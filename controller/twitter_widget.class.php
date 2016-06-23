@@ -212,6 +212,8 @@ class wptt_TwitterTweets extends WP_Widget {
                 $border_rad_avatar = $wpltf_wdgt_border_rad;
                 $transName = 'list-tweets-' . $name;
                 $backupName = $transName . '-backup';
+                $totalToFetch = ($replies_excl) ? max(50, $tweets_count * 3) : $tweets_count;
+
                 if (false === ($tweets = get_transient($transName) ) ) :
                     if (false === $loklak_api) :
                         require_once 'twitteroauth/twitteroauth.php';
@@ -219,7 +221,6 @@ class wptt_TwitterTweets extends WP_Widget {
                         $api_call = new TwitterOAuth(
                                 $consumerKey, $consumerSecret, $accessToken, $accessTokenSecret
                         );
-                        $totalToFetch = ($replies_excl) ? max(50, $tweets_count * 3) : $tweets_count;
 
                         $fetchedTweets = $api_call->get(
                             'statuses/user_timeline', array(
@@ -237,10 +238,9 @@ class wptt_TwitterTweets extends WP_Widget {
                         $fetchedTweets = json_decode($fetchedTweets, true);
                         $fetchedTweets = json_decode($fetchedTweets['body'], true);
                         $fetchedTweets = $fetchedTweets['statuses'];
-                        $fetchedTweets = (object)$fetchedTweets;
                     endif;
 
-                    if($api_call->http_code != 200 && false === $loklak_api) :
+                    if( false === $loklak_api && $api_call->http_code != 200 ) :
                         $tweets = get_option($backupName);
 
                     else :
@@ -248,16 +248,20 @@ class wptt_TwitterTweets extends WP_Widget {
                         
                         for($i = 0; $i < $limitToDisplay; $i++) :
                             $tweet = $fetchedTweets[$i];
+                            $tweet = (object)$tweet;
+                            $tweet->user = (object)($tweet->user);
+
                             $name = $tweet->user->name;
                             $screen_name = $tweet->user->screen_name;
                             $permalink = 'http://twitter.com/'. $name .'/status/'. $tweet->id_str;
                             $tweet_id = $tweet->id_str;
-                            $fav_count = ($loklak_api === true ? $tweet->favourites_count : $tweet->favorite_count);
-                            $image = $tweet->user->profile_image_url;
+                            $fav_count = ($loklak_api ? $tweet->favourites_count : $tweet->favorite_count);
+                            $image = ($loklak_api ? $tweet->user->profile_image_url_https : $tweet->user->profile_image_url);
                             $text = $this->sanitize_links($tweet);
                             $time = $tweet->created_at;
                             $time = date_parse($time);
                             $uTime = mktime($time['hour'], $time['minute'], $time['second'], $time['month'], $time['day'], $time['year']);
+
                             $tweets[] = array(
                                 'text' => $text,
                                 'scr_name'=>$screen_name,
@@ -292,7 +296,7 @@ class wptt_TwitterTweets extends WP_Widget {
                     }
 
                 }
-                if ($tweets) :
+                if ($tweets) :                  
                     ?>
                     <?php foreach ($tweets as $t) : ?>
                         <li class="tweets_avatar">
@@ -377,12 +381,12 @@ class wptt_TwitterTweets extends WP_Widget {
                             <?php } ?>
                             <div class="clear"></div>
                         </div><div class="clear"></div>
-                    </li>
-                <?php endforeach; ?>
+                        </li>
+                    <?php endforeach; ?>
 
-            <?php else : ?>
-                <li>Waiting for twitter.com...Try reloading the page again </li>
-            <?php endif; ?>
+                <?php else : ?>
+                    <li>Waiting for twitter.com...Try reloading the page again </li>
+                <?php endif; ?>
             </ul>
 
             <?php
