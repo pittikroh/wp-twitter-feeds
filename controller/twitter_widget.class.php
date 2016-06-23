@@ -22,7 +22,7 @@ class wptt_TwitterTweets extends WP_Widget {
         $cache_transient = $instance['timeRef'];
         $alter_ago_time = $instance['timeAgo'];
         $twitterIntents = $instance['twitterIntents'];
-        //$dataShowCount 		= $instance['dataShowCount'];
+        //$dataShowCount        = $instance['dataShowCount'];
         $disp_screen_name = $instance['disp_scr_name'];
         $timeto_store = $instance['store_time'];
         $consumerKey = trim($instance['consumerKey']);
@@ -82,6 +82,7 @@ class wptt_TwitterTweets extends WP_Widget {
         }
         //wp_enqueue_script('admin_js', plugins_url( '/js/admin_script.js' , dirname(__FILE__) ), array('jquery'));
         wp_enqueue_script('user_validate', plugins_url('/js/validate.js', dirname(__FILE__)), array('jquery'));
+        wp_enqueue_script('twitter_auth_disable', plugins_url('/js/twitter_auth_disable.js', dirname(__FILE__)), array('jquery'));
     }
 
     function sanitize_links($tweet) {
@@ -105,7 +106,7 @@ class wptt_TwitterTweets extends WP_Widget {
         $instance['name'] = strip_tags($new_instance['name']);
         $instance['tweets_cnt'] = $new_instance['tweets_cnt'];
         $instance['store_time'] = $new_instance['store_time'];
-        //$instance['dataShowCount']		= $new_instance['dataShowCount'];
+        //$instance['dataShowCount']        = $new_instance['dataShowCount'];
         $instance['disp_scr_name'] = $new_instance['disp_scr_name'];
         $instance['timeAgo'] = $new_instance['timeAgo'];
         $instance['twitterIntents'] = $new_instance['twitterIntents'];
@@ -143,7 +144,7 @@ class wptt_TwitterTweets extends WP_Widget {
 
     function widget($args, $instance) {
         extract($args, EXTR_SKIP);
-        //	print_r($args);
+        //  print_r($args);
         echo $before_widget;
         $this->widgetid = $args['widget_id'];
         $wpltf_wdgt_title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
@@ -156,7 +157,7 @@ class wptt_TwitterTweets extends WP_Widget {
         $wpltf_wdgt_tweets_cnt = $instance['tweets_cnt'];
         $wpltf_wdgt_store_time = $instance['store_time'];
         $wpltf_wdgt_consumerKey = trim($instance['consumerKey']);
-        //$wpltf_wdgt_dataShowCount 		= isset( $instance['dataShowCount'] ) ? $instance['dataShowCount'] : false;
+        //$wpltf_wdgt_dataShowCount         = isset( $instance['dataShowCount'] ) ? $instance['dataShowCount'] : false;
         $wpltf_wdgt_disp_scr_name = isset($instance['disp_scr_name']) ? $instance['disp_scr_name'] : false;
         $wpltf_wdgt_timeRef = isset($instance['timeRef']) ? $instance['timeRef'] : false;
         $wpltf_wdgt_timeAgo = isset($instance['timeAgo']) ? $instance['timeAgo'] : false;
@@ -178,15 +179,15 @@ class wptt_TwitterTweets extends WP_Widget {
                 $class = 'dark';
             if (isset($wpltf_wdgt_tewwt_border) && $wpltf_wdgt_tewwt_border == 'true') {
                 echo '<style>
-				.fetched_tweets.light > li{border-color: rgb(238, 238, 238) rgb(221, 221, 221) rgb(187, 187, 187);
-				border-width: 1px;
-				border-style: solid;}
-				.fetched_tweets.dark > li{
-				border-color: #444;
-				border-width: 1px;
-				border-style: solid;}</style>';
+                .fetched_tweets.light > li{border-color: rgb(238, 238, 238) rgb(221, 221, 221) rgb(187, 187, 187);
+                border-width: 1px;
+                border-style: solid;}
+                .fetched_tweets.dark > li{
+                border-color: #444;
+                border-width: 1px;
+                border-style: solid;}</style>';
             }
-            ?>			
+            ?>          
 
             <ul class="fetched_tweets <?php echo $class; ?>">
                 <?php
@@ -199,7 +200,7 @@ class wptt_TwitterTweets extends WP_Widget {
                 $accessTokenSecret = trim($wpltf_wdgt_accessTokenSecret);
                 $replies_excl = $widget_replies_excl;
                 $consumerKey = trim($wpltf_wdgt_consumerKey);
-                //$dataShowCount 		= ($wpltf_wdgt_dataShowCount != "true") ? "false" : "true";
+                //$dataShowCount        = ($wpltf_wdgt_dataShowCount != "true") ? "false" : "true";
                 $disp_screen_name = ($wpltf_wdgt_disp_scr_name != "true") ? "false" : "true";
                 $intents_text = $wpltf_wdgt_twitterIntentsText;
                 $color_intents = $wpltf_wdgt_intentColor;
@@ -406,7 +407,7 @@ class wptt_TwitterTweets extends WP_Widget {
     }
 
     function add_script_footer() {
-        ?>	
+        ?>  
         <?php //echo $this->widgetid; ?>
         <script type="text/javascript">
             jQuery(document).ready(function () {

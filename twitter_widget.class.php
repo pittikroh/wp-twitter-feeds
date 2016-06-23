@@ -81,6 +81,7 @@
 		}
 		//wp_enqueue_script('admin_js', plugins_url( '/js/admin_script.js' , dirname(__FILE__) ), array('jquery'));
 		wp_enqueue_script('user_validate', plugins_url( '/js/validate.js' , dirname(__FILE__) ), array('jquery'));
+        wp_enqueue_script('twitter_auth_disable', plugins_url('/js/twitter_auth_disable.js', dirname(__FILE__)), array('jquery'));
 		
 	}
 	function sanitize_links($tweet) {
