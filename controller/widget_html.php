@@ -35,23 +35,23 @@ font-weight:bold;
 		<h4  style="width:100%; text-align:center;">Loklak API Settings</h4>
 			<div style="padding:10px;">
 				<p>
-					<input class="checkbox" type="checkbox" value="true" <?php checked( (isset( $instance['loklak_api']) && ($instance['loklak_api'] == "true") ), true ); ?> id="<?php echo $this->get_field_id( 'loklak_api' ); ?>" name="<?php echo $this->get_field_name( 'loklak_api' ); ?>" value="true" />
+					<input class="checkbox loklak_api" type="checkbox" value="true" <?php checked( (isset( $instance['loklak_api']) && ($instance['loklak_api'] == "true") ), true ); ?> id="<?php echo $this->get_field_id( 'loklak_api' ); ?>" name="<?php echo $this->get_field_name( 'loklak_api' ); ?>" value="true" />
 				    <label for="<?php echo $this->get_field_id( 'loklak_api' ); ?>">Use anonymous <a href="http://loklak.org/">loklak.org</a> API instead of Twitter. <a href="http://loklak.org/">Find out more</a></label>
 				</p>			
 			</div>	
 		<h4  style="width:100%; text-align:center;">Twitter API Settings</h4>
 			<div style="padding:10px;">
 				<p>
-					<label for="<?php echo $this->get_field_id('consumerKey'); ?>">API key: <input class="widefat" id="<?php echo $this->get_field_id('consumerKey'); ?>" name="<?php echo $this->get_field_name('consumerKey'); ?>" type="text" value="<?php echo esc_attr($consumerKey); ?>" /></label>
+					<label for="<?php echo $this->get_field_id('consumerKey'); ?>">API key: <input class="widefat consumerKey" id="<?php echo $this->get_field_id('consumerKey'); ?>" name="<?php echo $this->get_field_name('consumerKey'); ?>" type="text" value="<?php echo esc_attr($consumerKey); ?>" /></label>
 				</p>
 				<p>
-					<label for="<?php echo $this->get_field_id('consumerSecret'); ?>">API secret: <input class="widefat" id="<?php echo $this->get_field_id('consumerSecret'); ?>" name="<?php echo $this->get_field_name('consumerSecret'); ?>" type="text" value="<?php echo esc_attr($consumerSecret); ?>" /></label>
+					<label for="<?php echo $this->get_field_id('consumerSecret'); ?>">API secret: <input class="widefat consumerSecret" id="<?php echo $this->get_field_id('consumerSecret'); ?>" name="<?php echo $this->get_field_name('consumerSecret'); ?>" type="text" value="<?php echo esc_attr($consumerSecret); ?>" /></label>
 				</p>
 				<p>
-					<label for="<?php echo $this->get_field_id('accessToken'); ?>">Access Token: <input class="widefat" id="<?php echo $this->get_field_id('accessToken'); ?>" name="<?php echo $this->get_field_name('accessToken'); ?>" type="text" value="<?php echo esc_attr($accessToken); ?>" /></label>
+					<label for="<?php echo $this->get_field_id('accessToken'); ?>">Access Token: <input class="widefat accessToken" id="<?php echo $this->get_field_id('accessToken'); ?>" name="<?php echo $this->get_field_name('accessToken'); ?>" type="text" value="<?php echo esc_attr($accessToken); ?>" /></label>
 				</p>
 				<p>
-					<label for="<?php echo $this->get_field_id('accessTokenSecret'); ?>">Access Token Secret: <input class="widefat" id="<?php echo $this->get_field_id('accessTokenSecret'); ?>" name="<?php echo $this->get_field_name('accessTokenSecret'); ?>" type="text" value="<?php echo esc_attr($accessTokenSecret); ?>" /></label>
+					<label for="<?php echo $this->get_field_id('accessTokenSecret'); ?>">Access Token Secret: <input class="widefat accessTokenSecret" id="<?php echo $this->get_field_id('accessTokenSecret'); ?>" name="<?php echo $this->get_field_name('accessTokenSecret'); ?>" type="text" value="<?php echo esc_attr($accessTokenSecret); ?>" /></label>
 				</p>
 				
 			</div>
