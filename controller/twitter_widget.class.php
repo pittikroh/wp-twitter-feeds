@@ -14,7 +14,7 @@ class wptt_TwitterTweets extends WP_Widget {
         $widget_title = $instance['title'];
         $name = $instance['name'];
         $tweets_count = $instance['tweets_cnt'];
-        $loklak = $instance['loklak_api'];
+        $loklak_api = $instance['loklak_api'];
         $accessTokenSecret = trim($instance['accessTokenSecret']);
         $replies_excl = $instance['replies_excl'];
         $consumerSecret = trim($instance['consumerSecret']);
@@ -229,7 +229,7 @@ class wptt_TwitterTweets extends WP_Widget {
                         );
                     else : 
                         if(!class_exists('Loklak')) :
-                            require_once('loklak_php_api/loklak.php')
+                            require_once('loklak_php_api/loklak.php');
                         endif;
                         $api_call = new Loklak();
                         $fetchedTweets = $api_call->search('', null, null, $name, $totalToFetch);

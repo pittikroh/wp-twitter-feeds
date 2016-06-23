@@ -19,8 +19,7 @@ font-weight:bold;
 </style>
 
 
-
-<p>
+		<p>
 			<label for="<?php echo $this->get_field_id('title'); ?>">Widget Title: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($widget_title); ?>" /></label>
 		</p>
 		<p>
@@ -33,8 +32,14 @@ font-weight:bold;
 		<p>
 			<label for="<?php echo $this->get_field_id('tweets_cnt'); ?>">Number of Tweets to Fetch: <input class="widefat" id="<?php echo $this->get_field_id('tweets_cnt'); ?>" name="<?php echo $this->get_field_name('tweets_cnt'); ?>" type="text" value="<?php echo esc_attr($tweets_count); ?>" /></label>
 		</p>
-		
-<h4  style="width:100%; text-align:center;">Twitter API Settings</h4>
+		<h4  style="width:100%; text-align:center;">Loklak API Settings</h4>
+			<div style="padding:10px;">
+				<p>
+					<input class="checkbox" type="checkbox" value="true" <?php checked( (isset( $instance['loklak_api']) && ($instance['loklak_api'] == "true") ), true ); ?> id="<?php echo $this->get_field_id( 'loklak_api' ); ?>" name="<?php echo $this->get_field_name( 'loklak_api' ); ?>" value="true" />
+				    <label for="<?php echo $this->get_field_id( 'loklak_api' ); ?>">Use anonymous <a href="http://loklak.org/">loklak.org</a> API instead of Twitter. <a href="http://loklak.org/">Find out more</a></label>
+				</p>			
+			</div>	
+		<h4  style="width:100%; text-align:center;">Twitter API Settings</h4>
 			<div style="padding:10px;">
 				<p>
 					<label for="<?php echo $this->get_field_id('consumerKey'); ?>">API key: <input class="widefat" id="<?php echo $this->get_field_id('consumerKey'); ?>" name="<?php echo $this->get_field_name('consumerKey'); ?>" type="text" value="<?php echo esc_attr($consumerKey); ?>" /></label>
