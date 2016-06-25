@@ -240,7 +240,7 @@ class wptt_TwitterTweets extends WP_Widget {
                         $fetchedTweets = $fetchedTweets['statuses'];
                     endif;
 
-                    if( false === $loklak_api && $api_call->http_code != 200 ) :
+                    if( empty($fetchedTweets) || $api_call->http_code != 200 ) :
                         $tweets = get_option($backupName);
 
                     else :
