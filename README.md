@@ -1,4 +1,5 @@
 ﻿=== Plugin Name ===
+
 Contributors: vivacityinfotech.jaipur,Planet Interactive 
 Donate link: http://bit.ly/1icl56K
 Tags:  wp twitter feeds,twitter feeds, twitter timeline,twitter widget,twitter widget for wordpress,wp twitter feeds widget,live tweets, live twitter feeds, tweets, feeds, wp twitter feeds plugin, twitter user tweets,  twitter 1.1, twitter api
@@ -78,13 +79,35 @@ Installation consists of following steps:
 == Screenshots ==
 
 1. WP Twitter Feeds plugin installed and appears in the plugins menu.
+
+    ![Plugin Installed](./images/screenshot-1.png)
+
 2. WP Twitter Feeds widget under Appearence->Widgets.
+
+    ![Appearance->Widgets1](./images/screenshot-2.png)
+
 3. WP Twitter Feeds widget under Appearence->Widgets.
+
+    ![Appearance->Widgets2](./images/screenshot-3.png)
+
 4. WP Twitter Feeds widget under Appearence->Widgets.
+
+    ![Appearance->Widgets3](./images/screenshot-4.png)
+
 5. WP Twitter Feeds widget under Appearence->Widgets.
+
+    ![Appearance->Widgets4](./images/screenshot-5.png)
+
 6. WP Twitter Feeds widget on front End (Light Theme).
+
+    ![Light Theme](./images/screenshot-6.png)
+
 7. WP Twitter Feeds widget on front End (Dark Theme).
+
+    ![Dark Theme](./images/screenshot-7.png)
+
 8. WP Twitter Feeds widget Slider feature under Appearence->Widgets.
+
 
 Requires: 3.0 or higher
 Compatible up to: 3.9.1
@@ -122,6 +145,7 @@ Log in to vote.
 
 
 == Changelog ==
+
 = 1.4.8 =
 * Tested with the latest version for wordpress.
 
