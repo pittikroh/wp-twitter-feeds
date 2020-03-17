@@ -55,7 +55,7 @@ $classes[] = $widget_id;
 					$tweet = $fetchedTweets[$i];
 			    	$name = $tweet->user->name;
 			    	$screen_name = $tweet->user->screen_name;
-			    	$permalink = 'http://twitter.com/'. $name .'/status/'. $tweet->id_str;
+			    	$permalink = 'https://twitter.com/'. $name .'/status/'. $tweet->id_str;
 			    	$tweet_id = $tweet->id_str;
 			    	$image = $tweet->user->profile_image_url;
 					$text = $this->sanitize_links($tweet);
@@ -129,7 +129,7 @@ $classes[] = $widget_id;
 			            <div class="times">
 			            <em>
 			            
-						<a href="http://www.twitter.com/<?php echo $screen_name; ?>" target="_blank" title="Follow <?php echo $name; ?> on Twitter [Opens new window]">
+						<a href="https://www.twitter.com/<?php echo $screen_name; ?>" target="_blank" title="Follow <?php echo $name; ?> on Twitter [Opens new window]">
 							<?php
 								if($cache_transient == "true"){
 									$timeDisplay = twitter_time_diff($t['time'], current_time('timestamp'));
@@ -173,9 +173,9 @@ $classes[] = $widget_id;
 <div class="seperator_wpltf"></div>
 <?php }?>
       <ul class="tweet-actions " role="menu" >
-  <li><a href="http://twitter.com/intent/tweet?in_reply_to=<?php echo $t['tweet_id']; ?>" data-lang="en" class="in-reply-to" title="Reply" target="_blank"><span aria-hidden="true" data-icon="&#xf079;" <?php echo ($color_intents) ? 'style="color:'.$color_intents.';"' :''; ?>></span></a></li>
-  <li><a href="http://twitter.com/intent/retweet?tweet_id=<?php echo $t['tweet_id']; ?>" data-lang="en" class="retweet" title="Retweet" target="_blank"><span aria-hidden="true" data-icon="&#xf112;" <?php echo ($color_intents) ? 'style="color:'.$color_intents.';"' :''; ?>></span></a></li>
-  <li><a href="http://twitter.com/intent/favorite?tweet_id=<?php echo $t['tweet_id']; ?>" data-lang="en" class="favorite" title="Favorite" target="_blank"><span aria-hidden="true" data-icon="&#xf005;" <?php echo ($color_intents) ? 'style="color:'.$color_intents.';"' :''; ?>></span></a></li>
+  <li><a href="https://twitter.com/intent/tweet?in_reply_to=<?php echo $t['tweet_id']; ?>" data-lang="en" class="in-reply-to" title="Reply" target="_blank"><span aria-hidden="true" data-icon="&#xf079;" <?php echo ($color_intents) ? 'style="color:'.$color_intents.';"' :''; ?>></span></a></li>
+  <li><a href="https://twitter.com/intent/retweet?tweet_id=<?php echo $t['tweet_id']; ?>" data-lang="en" class="retweet" title="Retweet" target="_blank"><span aria-hidden="true" data-icon="&#xf112;" <?php echo ($color_intents) ? 'style="color:'.$color_intents.';"' :''; ?>></span></a></li>
+  <li><a href="https://twitter.com/intent/favorite?tweet_id=<?php echo $t['tweet_id']; ?>" data-lang="en" class="favorite" title="Favorite" target="_blank"><span aria-hidden="true" data-icon="&#xf005;" <?php echo ($color_intents) ? 'style="color:'.$color_intents.';"' :''; ?>></span></a></li>
 </ul>
     </div>
 						<?php } ?>

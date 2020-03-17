@@ -253,7 +253,7 @@ class wptt_TwitterTweets extends WP_Widget {
 
                             $name = $tweet->user->name;
                             $screen_name = $tweet->user->screen_name;
-                            $permalink = 'http://twitter.com/'. $name .'/status/'. $tweet->id_str;
+                            $permalink = 'https://twitter.com/'. $name .'/status/'. $tweet->id_str;
                             $tweet_id = $tweet->id_str;
                             $fav_count = ($loklak_api ? $tweet->favourites_count : $tweet->favorite_count);
                             $image = ($loklak_api ? $tweet->user->profile_image_url_https : $tweet->user->profile_image_url);
@@ -307,7 +307,7 @@ class wptt_TwitterTweets extends WP_Widget {
                                 echo '<img ';
                                 echo 'width="45px" height="45px"';
                                 //echo 'src="'.$t['image'].'" alt="Tweet Avatar" class="';
-                                echo 'src="' . str_replace('http://', '//', $t['image']) . '" alt="Tweet Avatar" class="';
+                                echo 'src="' . str_replace('https://', '//', $t['image']) . '" alt="Tweet Avatar" class="';
                                 echo ($border_rad_avatar) ? 'circular' : '';
                                 echo '"/>';
                             }
